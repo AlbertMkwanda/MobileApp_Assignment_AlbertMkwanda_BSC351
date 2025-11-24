@@ -1,52 +1,52 @@
-# Campus Navigator
+# CampusGuide - Interactive Campus Navigation
 
-## Project Overview
+![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-blue.svg?style=for-the-badge&logo=kotlin)
+![Platform](https://img.shields.io/badge/Platform-Android-green.svg?style=for-the-badge&logo=android)
+![UI](https://img.shields.io/badge/UI-Jetpack_Compose-blue.svg?style=for-the-badge&logo=jetpackcompose)
 
-The Campus Destination is a mobile application designed to help users navigate a university campus. It provides a persistent list of key locations (classes, hostels, offices) and allows users to save their own points of interest using their current GPS coordinates. A dedicated map view uses **osmdroid** for offline-capable mapping and integrates Google's Fused Location Provider to offer real-time tracking towards any selected destination.
+An Android application designed to help students, staff, and visitors navigate a university campus with ease. The app provides a list of key campus locations, allows users to add new locations, and offers real-time map tracking to guide them to their selected destination.
 
-The application is built using Kotlin for modern Android development and uses `SharedPreferences` (via the `LocationStorage` utility) for basic persistence of user-added locations.
+## Core Features
 
-## Key Features
+*   **Interactive Location List:** Displays a scrollable list of all important campus locations (e.g., "Library," "Admin Block," "Cafeteria").
+*   **Real-Time Map Tracking:** Users can tap on any location to open a map view that shows their current position and guides them to the destination.
+*   **Add Custom Locations:** Users can contribute to the campus map by adding new locations with their name, type, and geographic coordinates.
+*   **Dynamic Theming:** Instantly switch between light and dark mode for comfortable viewing in any lighting condition.
+*   **Modern, Clean UI:** Built entirely with Jetpack Compose and Material Design 3 for a fluid and intuitive user experience.
 
-1.  **Location List (MainActivity):** Displays a scrollable list of campus locations, including built-in defaults and user-added places.
-2.  **Destination Tracking (MapTrackingActivity):** Launches a map centered on a selected destination, showing the user's live GPS location and heading towards the target.
-3.  **Add Place Functionality (AddLocationActivity):** Allows the user to capture their current latitude and longitude and save it as a named "User Added" location.
-4.  **Data Persistence:** Uses Gson and SharedPreferences to save and retrieve user-added locations across app sessions.
-5.  **Offline Map Capability:** Utilizes the osmdroid library, which can cache map tiles for use without a constant internet connection.
+## Technical Implementation
 
-## Technical Stack & Dependencies
+This project is built using the latest Android development practices, emphasizing a clean, scalable, and maintainable architecture.
 
-  * **Language:** Kotlin
-  * **Platform:** Android
-  * **Mapping:** `osmdroid` (OpenStreetMap for Android)
-  * **Location Services:** `com.google.android.gms:play-services-location` (Fused Location Provider Client)
-  * **Data Serialization:** `com.google.code.gson:gson`
-  * **UI Components:** `androidx.cardview`, `androidx.recyclerview`
+### 1. Architecture & Technologies
 
-## Installation and Setup
+*   **Language:** **Kotlin** - The official, modern language for Android development, enabling concise and safe code.
+*   **User Interface:** **Jetpack Compose** - A declarative UI toolkit used to build the entire native interface. This eliminates XML layouts and allows for a more dynamic and interactive UI.
+*   **Design System:** **Material Design 3 (Material3)** - The latest design guidelines from Google, providing modern components, dynamic color, and consistent theming.
+*   **Navigation:** **Jetpack Navigation for Compose** - Manages all screen transitions within the app, providing a robust and type-safe way to handle navigation logic.
+*   **State Management:** The app follows a unidirectional data flow (UDF) pattern.
+    *   **ViewModel (`androidx.lifecycle.ViewModel`):** Holds and manages UI-related data and state. It survives configuration changes like screen rotations.
+    *   **StateFlow (`kotlinx.coroutines.flow.StateFlow`):** A state-holder observable flow used within the `ViewModel` to expose UI state to the Composables.
+    *   **`collectAsState()`:** Collects values from the `StateFlow` and represents the latest value as Compose `State`, automatically triggering UI updates when the data changes.
 
-### 1\. Configure Dependencies (build.gradle)
+### 2. Key Code Components & Libraries
 
-Ensure your `app/build.gradle` file includes all necessary dependencies:
+*   **`LocationListScreen.kt`**: The main screen of the app. It uses a `Scaffold` to structure the UI with a `TopAppBar`, a `FloatingActionButton` for adding new locations, and a `LazyColumn` to efficiently display the list of locations.
+*   **`LocationViewModel.kt`**: The brain behind the `LocationListScreen`. It is responsible for fetching the list of campus locations (likely from a local database or a remote server) and exposing it as a `StateFlow`.
+*   **`Screen.kt`**: A sealed class that defines all navigation routes in the app, preventing typos and making navigation logic easy to manage.
+*   **osmdroid (`org.osmdroid:osmdroid-android`)**: A powerful, open-source library used for displaying maps and handling map-based interactions, serving as an excellent alternative to Google Maps for many use cases.
+*   **Google Play Services Location (`com.google.android.gms:play-services-location`)**: Used to get the device's current location for the real-time tracking feature on the map.
 
-```gradle
-dependencies {
-    // ... existing dependencies (kotlin, core, appcompat, constraintlayout)
+### 3. Navigation Graph
 
-    // osmdroid (Free Map Library)
-   implementation("org.osmdroid:osmdroid-android:6.1.18")
-    // Google Location Services (for modern location tracking - free to use)
-    implementation("com.google.android.gms:play-services-location:21.0.1")
-    // Gson for serialization/deserialization of locations
-    implementation("com.google.code.gson:gson:2.10.1")
-    // CardView and RecyclerView for Activity 1 UI
-    implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    // For ConstraintLayout attributes (layout_constraintTop_toTopOf, etc.)
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    // For Material Design components and colors (like design_default_color_primary)
-    implementation("com.google.android.material:material:1.13.0")
-    implementation ("androidx.cardview:cardview:1.0.0")
-    implementation ("androidx.recyclerview:recyclerview:1.3.2")
-}
+The app's navigation is structured around several key screens:
+
+*   **`LocationList`** (Main Screen): Displays all locations.
+*   **`MapTracking`**: The map screen that takes a location's name and coordinates as arguments to display the route.
+*   **`AddLocation`**: A form for users to input details for a new campus location.
+*   **`About`**: A simple screen providing information about the app.
+
+## How to Build and Run
+
+1.  **Clone the Repository:**
+    
